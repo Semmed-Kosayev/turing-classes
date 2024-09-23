@@ -24,7 +24,7 @@ public class WeekPlanner {
 
         while (true) {
             System.out.print("Please, input the day of the week: ");
-            String userInput = scanner.nextLine().trim().toLowerCase(); // Handles case insensitivity and extra spaces
+            String userInput = scanner.nextLine().trim().toLowerCase();
 
             if (userInput.equals("exit")) {
                 break;

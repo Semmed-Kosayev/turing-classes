@@ -1,5 +1,6 @@
 package az.edu.turing.module01;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -34,18 +35,20 @@ public class NumberGuessGame {
             }
         }
 
-        printGuesses(guesses);
+        printGuesses(Arrays.copyOf(guesses, guessCount));
 
         System.out.println("Thank you for playing!");
         scanner.close();
     }
 
     public static void printGuesses(int[] guesses) {
+        Arrays.sort(guesses);
+
         System.out.print("Your numbers: ");
         for (int i = guesses.length - 1; i >= 0; i--) {
-            int guess = guesses[i];
-            if (guess != 0) System.out.print(guess + " ");
+            System.out.printf("%d ", guesses[i]);
         }
+
         System.out.println();
     }
 
@@ -54,18 +57,15 @@ public class NumberGuessGame {
         while (true) {
             System.out.print("Enter your guess (0-100): ");
 
-            while (!scanner.hasNextInt()) {
+            if (scanner.hasNextInt()) {
+                guess = scanner.nextInt();
+                if (guess >= 0 && guess <= 100) break;
+                else System.out.println("Please enter a number between 0 and 100.");
+            } else {
                 System.out.println("Invalid input. Please enter a number.");
                 scanner.next();
             }
 
-            guess = scanner.nextInt();
-
-            if (guess < 0 || guess > 100) {
-                System.out.println("Please enter a number between 0 and 100.");
-                continue;
-            }
-            break;
         }
         return guess;
     }
