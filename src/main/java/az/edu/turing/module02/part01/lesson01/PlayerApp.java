@@ -1,7 +1,7 @@
 package az.edu.turing.module02.part01.lesson01;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlayerApp {
@@ -9,20 +9,14 @@ public class PlayerApp {
         List<Player> players = getPlayers();
         printList(players);
 
-        Collections.sort(players, (Player o1, Player o2) -> {
-            if (o1.getScore() != o2.getScore()) return Double.compare(o2.getScore(), o1.getScore());
-            else {
-                if (o1.isFemale() != o2.isFemale()) return Boolean.compare(o2.isFemale(), o1.isFemale());
-                else {
-                    if (o1.getAge() != o2.getAge()) return Integer.compare(o1.getAge(), o2.getAge());
-                    else {
-                        if (!o1.getName().equals(o2.getName())) return o2.getName().compareTo(o1.getName());
-                        else return Integer.compare(o1.getId(), o2.getId());
-                    }
+        players.sort(
+                Comparator.comparing(Player::getScore, Comparator.reverseOrder())
+                        .thenComparing(Player::isFemale, Comparator.reverseOrder())
+                        .thenComparing(Player::getAge)
+                        .thenComparing(Player::getName, Comparator.reverseOrder())
+                        .thenComparing(Player::getId)
+        );
 
-                }
-            }
-        });
         printList(players);
     }
 
