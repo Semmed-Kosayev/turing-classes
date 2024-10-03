@@ -131,14 +131,16 @@ public class LinkedList<T> {
                 size--;
                 return true;
             }
+            previous = current;
+            current = current.next;
         }
 
         return false;
     }
 
     public void deleteAll() {
-        head.next = null;
         head = null;
+        size = 0;
     }
 
     public int size() {
@@ -159,19 +161,6 @@ public class LinkedList<T> {
 
     public Object[] toArray() {
         Object[] valueArray = new Object[size];
-
-        if (size == 0) return valueArray;
-
-        int i = 0;
-        for (LinkNode<T> nodeIterator = head; nodeIterator != null; nodeIterator = nodeIterator.next) {
-            valueArray[i++] = nodeIterator.value;
-        }
-
-        return valueArray;
-    }
-
-    public T[] toArray(T[] type) {
-        @SuppressWarnings("unchecked") T[] valueArray = (T[]) Array.newInstance(type.getClass().getComponentType(), size);
 
         if (size == 0) return valueArray;
 
