@@ -55,10 +55,15 @@ public class LinkedList<T> {
     }
 
     public void insert(int index, T item) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
 
         if (index == 0) {
             addHead(item);
+            return;
+        }
+
+        if (index == size) {
+            addTail(item);
             return;
         }
 
