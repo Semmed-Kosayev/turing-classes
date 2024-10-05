@@ -65,6 +65,8 @@ public class LinkedList<T> {
     }
 
     public T update(final int index, final T item) {
+        if (size == 0) return addHead(item);
+
         if (index <= 0) {
             head.value = item;
             return item;
