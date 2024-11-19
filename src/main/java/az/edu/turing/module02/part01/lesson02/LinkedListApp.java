@@ -3,6 +3,7 @@ package az.edu.turing.module02.part01.lesson02;
 import java.util.Arrays;
 
 public class LinkedListApp {
+
     public static void main(String[] args) {
         LinkedList<String> lst = new LinkedList<>();
 

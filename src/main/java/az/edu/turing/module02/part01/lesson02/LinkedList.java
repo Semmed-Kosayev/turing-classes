@@ -1,131 +1,112 @@
 package az.edu.turing.module02.part01.lesson02;
 
-import java.lang.reflect.Array;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class LinkedList<T> {
-    LinkNode<T> head;
-    int size = 0;
 
-    public void addHead(T item) {
-        LinkNode<T> itemNode = new LinkNode<>(item);
+    private LinkNode<T> head;
+    private int size = 0;
+
+    public T addHead(final T item) {
+        final LinkNode<T> itemNode = new LinkNode<>(item);
         itemNode.next = head;
         head = itemNode;
         size++;
+
+        return item;
     }
 
-    public void addTail(T item) {
-        LinkNode<T> itemNode = new LinkNode<>(item);
+    public T addTail(final T item) {
+        final LinkNode<T> itemNode = new LinkNode<>(item);
 
-        if (head == null) {
-            head = itemNode;
-            size++;
-            return;
-        }
+        if (head == null) return addHead(item);
 
-        LinkNode<T> lastNode = getLastNode();
-        lastNode.next = itemNode;
+        getLastNode().next = itemNode;
         size++;
+        return item;
     }
 
-    public void removeHead() {
-        if (head == null) throw new NoSuchElementException();
+    public Optional<T> removeHead() {
+        if (size == 0) return Optional.empty();
+
+        final T removedValue = head.value;
+
+        if (size == 1) {
+            deleteAll();
+            return Optional.of(removedValue);
+        }
 
         head = head.next;
         size--;
+
+        return Optional.of(removedValue);
     }
 
-    public void removeTail() {
-        if (head == null) throw new NoSuchElementException();
+    public Optional<T> removeTail() {
+        if (size == 0) return Optional.empty();
 
-        if (size == 1) {
-            head = null;
-            size--;
-            return;
-        }
-
-        LinkNode<T> nodeIterator = head;
-
-        for (int i = 0; i < size - 2; i++) {
-            nodeIterator = nodeIterator.next;
-        }
-
-        nodeIterator.next = null;
-        size--;
+        return delete(size - 1);
     }
 
-    public void insert(int index, T item) {
-        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+    public T insert(final int index, final T item) {
+        if (index <= 0) return addHead(item);
+        if (index >= size) return addTail(item);
 
-        if (index == 0) {
-            addHead(item);
-            return;
-        }
+        LinkNode<T> current = head;
 
-        if (index == size) {
-            addTail(item);
-            return;
-        }
+        for (int i = 0; i < index - 1; i++) current = current.next;
 
-        LinkNode<T> nodeIterator = head;
-
-        for (int i = 0; i < index - 1; i++) {
-            nodeIterator = nodeIterator.next;
-        }
-
-        LinkNode<T> newNode = new LinkNode<>(item);
-        newNode.next = nodeIterator.next;
-        nodeIterator.next = newNode;
+        final LinkNode<T> newNode = new LinkNode<>(item);
+        newNode.next = current.next;
+        current.next = newNode;
         size++;
+
+        return item;
     }
 
-    public void update(int index, T item) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+    public T update(final int index, final T item) {
+        if (size == 0) return addHead(item);
 
-        if (index == 0) {
+        if (index <= 0) {
             head.value = item;
-            return;
+            return item;
         }
 
-        LinkNode<T> nodeIterator = head;
-
-        for (int i = 0; i < index; i++) {
-            nodeIterator = nodeIterator.next;
+        if (index >= size) {
+            getLastNode().value = item;
+            return item;
         }
 
-        nodeIterator.value = item;
+        LinkNode<T> current = head;
+
+        for (int i = 0; i < index; i++) current = current.next;
+
+        current.value = item;
+
+        return item;
     }
 
-    public T delete(int index) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+    public Optional<T> delete(final int index) {
+        if (index < 0 || index >= size) return Optional.empty();
+        if (index == 0) return removeHead();
 
-        T valueToBeDeleted;
+        final T valueToBeDeleted;
 
-        if (index == 0) {
-            valueToBeDeleted = head.value;
-            removeHead();
-            return valueToBeDeleted;
-        }
+        LinkNode<T> current = head;
 
-        LinkNode<T> nodeIterator = head;
+        for (int i = 0; i < index - 1; i++) current = current.next;
 
-        for (int i = 0; i < index - 1; i++) {
-            nodeIterator = nodeIterator.next;
-        }
-
-        LinkNode<T> nodeToBeDeleted = nodeIterator.next;
+        LinkNode<T> nodeToBeDeleted = current.next;
         valueToBeDeleted = nodeToBeDeleted.value;
-        nodeIterator.next = nodeToBeDeleted.next;
 
+        current.next = nodeToBeDeleted.next;
         size--;
-        return valueToBeDeleted;
+        return Optional.of(valueToBeDeleted);
     }
 
-    public boolean delete(T item) {
-        if (head.value.equals(item)) {
-            removeHead();
-            return true;
-        }
+    public boolean delete(final T item) {
+        if (size == 0) return false;
+        if (head.value.equals(item)) return removeHead().isPresent();
 
         LinkNode<T> current = head.next;
         LinkNode<T> previous = head;
@@ -153,11 +134,11 @@ public class LinkedList<T> {
     }
 
     public LinkNode<T> getLastNode() {
-        LinkNode<T> nodeIterator = head;
+        LinkNode<T> current = head;
 
-        while (nodeIterator.hasNext()) nodeIterator = nodeIterator.next;
+        for (int i = 0; i < size - 1; i++) current = current.next;
 
-        return nodeIterator;
+        return current;
     }
 
     public LinkNode<T> getFirstNode() {
